@@ -1,26 +1,54 @@
 const CustomError = require("../extensions/custom-error");
 
 const chainMaker = {
+  _chain : [],
   getLength() {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+    return this._chain.length;
   },
-  addLink(value) {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+  addLink(value = ` `) {
+    this._chain.push(value);
+    return this;
   },
   removeLink(position) {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+    if (!Number.isInteger(position) || position < 1) {
+      this._chain = [];
+      throw new Error();
+    }
+    this._chain.splice(position - 1, 1);
+    return this;
   },
   reverseChain() {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+    this._chain.reverse();
+    return this;
   },
   finishChain() {
-    throw new CustomError('Not implemented');
-    // remove line with error and write your code here
+    let arr = this._chain.slice().reduce((acc, cur, i) => {
+      if (i === 0 && this._chain.slice().length == 1) {
+        return acc + `( ${cur} )`;
+      }
+      if (i === 0) {
+        return acc + `( ${cur} )~`;
+      }
+      if (i === this._chain.slice().length - 1) {
+        return acc + `~( ${cur} )`;
+      }
+      return acc + `~( ${cur} )~`
+    }, ``)
+    this._chain = [];
+    return arr;
   }
 };
 
 module.exports = chainMaker;
+
+
+
+// '( null )~~( GHI )~~( 333 )~~( 0 )~~( GHI )');
+
+
+//
+// console.log(chainMaker.addLink('8.963').reverseChain()
+//   .reverseChain().reverseChain().reverseChain()
+//   .addLink({0: 'first', 1: 'second', 'length': 2})
+//   .reverseChain().addLink(3.14).addLink('DEF')
+//   .reverseChain().finishChain())
